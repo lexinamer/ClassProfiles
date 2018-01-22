@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+
+
+    <style type="text/css">
+      .label-text {
+          alignment-baseline: middle;
+          font-size: 15px;
+          font-weight: bold;
+          font-family: arial,helvetica,"sans-serif";
+          fill: #243668;
+      }
+
+      .label-line {
+          stroke-width: 2;
+      }
+
+      path:hover {
+        fill-opacity: .7;
+      }
+
+    </style>
+  </head>
+  <body>
+
+
+    <svg>
+        <g id="canvas">
+            <g id="art" />
+            <g id="labels" /></g>
+    </svg>
+
+
+
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+
+<script type="text/javascript">
+
+var data = [{
+  instances: 19,
+  label: 'Consulting'
+},{
+  instances: 5,
+  label: 'Energy/Chemical/Gas'
+},{
+  instances: 3,
+  label: 'Consumer Goods'
+},{
+  instances: 3,
+  label: 'Entrepreneurship'
+},{
+  instances: 1,
+  label: 'Environment & Sustainability'
+},{
+  instances: 19,
+  label: 'Financial Services'
+},{
+  instances: 3,
+  label: 'General Management'
+},{
+  instances: 6,
+  label: 'Government'
+},{
+  instances: 2,
+  label: 'Human Resources'
+},{
+  instances: 4,
+  label: 'IT'
+},{
+  instances: 2,
+  label: 'International Development'
+},{
+  instances: 7,
+  label: 'Hospital/Health Care'
+},{
+  instances: 3,
+  label: 'Manufacturing/Operations'
+},{
+  instances: 4,
+  label: 'Marketing/PR/Advertising'
+},{
+  instances: 1,
+  label: 'Media/Sports/Entertainment'
+},{
+  instances: 7,
+  label: 'Nonprofit/Education/Special Org.'
+},{
+  instances: 6,
+  label: 'Other'
+},{
+  instances: 2,
+  label: 'Research & Development'
+},{
+  instances: 4,
+  label: 'Sales/Business Development'
+},];
+
+svg = d3.select("svg");
+canvas = d3.select("#canvas");
+art = d3.select("#art");
+labels = d3.select("#labels");
+
+// Create the pie layout function.
+// This function will add convenience
+// data to our existing data, like
+// the start angle and end angle
+// for each data element.
+jhw_pie = d3.layout.pie()
+.sort(null)
+jhw_pie.value(function (d, i) {
+  // Tells the layout function what
+  // property of our data object to
+  // use as the value.
+  return d.instances;
+});
+
+// Store our chart dimensions
+cDim = {
+  height: 500,
+  width: 500,
+  innerRadius: 50,
+  outerRadius: 140,
+  labelRadius: 175
+}
+
+// Set the size of our SVG element
+svg.attr({
+  height: cDim.height,
+  width: cDim.width
+});
+
+// This translate property moves the origin of the group's coordinate
+// space to the center of the SVG element, saving us translating every
+// coordinate individually.
+canvas.attr("transform", "translate(" + (450) + "," + (cDim.width / 2) + ")");
+
+pied_data = jhw_pie(data);
+
+// The pied_arc function we make here will calculate the path
+// information for each wedge based on the data set. This is
+// used in the "d" attribute.
+pied_arc = d3.svg.arc()
+  .innerRadius(50)
+  .outerRadius(150);
+
+// It is part of d3 core.
+var colors = d3.scale.ordinal()
+        .range(["#243668", "#2b7eb4", "#186b97", "#6391a1", "#d2c5b7", "#9c9286", "#5b5b59"]);
+
+
+// Let's start drawing the arcs.
+enteringArcs = art.selectAll(".wedge").data(pied_data).enter();
+
+enteringArcs.append("path")
+  .attr("class", "wedge")
+  .attr("d", pied_arc)
+  .style("fill", function (d, i) {
+     return colors(i);
+});
+
+// Now we'll draw our label lines, etc.
+enteringLabels = labels.selectAll(".label").data(pied_data).enter();
+labelGroups = enteringLabels.append("g").attr("class", "label");
+// labelGroups.append("circle").attr({
+//   x: 0,
+//   y: 0,
+//   r: 2,
+//   fill: "#000",
+//   transform: function (d, i) {
+//       centroid = pied_arc.centroid(d);
+//       return "translate(" + pied_arc.centroid(d) + ")";
+//   },
+//       'class': "label-circle"
+// });
+
+textLines = labelGroups.append("line").attr({
+  x1: function (d, i) {
+      return pied_arc.centroid(d)[0];
+  },
+  y1: function (d, i) {
+      return pied_arc.centroid(d)[1];
+  },
+  x2: function (d, i) {
+      centroid = pied_arc.centroid(d);
+      midAngle = Math.atan2(centroid[1], centroid[0]);
+      x = Math.cos(midAngle) * cDim.labelRadius;
+      return x;
+  },
+  y2: function (d, i) {
+      centroid = pied_arc.centroid(d);
+      midAngle = Math.atan2(centroid[1], centroid[0]);
+      y = Math.sin(midAngle) * cDim.labelRadius;
+      return y;
+  },
+      'class': "label-line",
+      stroke: function (d, i) {
+         return colors(i);
+    }
+});
+
+textLabels = labelGroups.append("text").attr({
+  x: function (d, i) {
+      centroid = pied_arc.centroid(d);
+      midAngle = Math.atan2(centroid[1], centroid[0]);
+      x = Math.cos(midAngle) * cDim.labelRadius;
+      sign = (x > 0) ? 1 : -1
+      labelX = x + (5 * sign)
+      return labelX;
+  },
+  y: function (d, i) {
+      centroid = pied_arc.centroid(d);
+      midAngle = Math.atan2(centroid[1], centroid[0]);
+      y = Math.sin(midAngle) * cDim.labelRadius;
+      return y;
+  },
+      'text-anchor': function (d, i) {
+      centroid = pied_arc.centroid(d);
+      midAngle = Math.atan2(centroid[1], centroid[0]);
+      x = Math.cos(midAngle) * cDim.labelRadius;
+      return (x > 0) ? "start" : "end";
+  },
+      'class': 'label-text'
+  }).text(function (d) {
+      return d.data.instances + "% " + d.data.label
+    });
+
+alpha = 0.5;
+spacing = 25;
+
+function relax() {
+  again = false;
+  textLabels.each(function (d, i) {
+      a = this;
+      da = d3.select(a);
+      y1 = da.attr("y");
+      textLabels.each(function (d, j) {
+          b = this;
+          // a & b are the same element and don't collide.
+          if (a == b) return;
+          db = d3.select(b);
+          // a & b are on opposite sides of the chart and
+          // don't collide
+          if (da.attr("text-anchor") != db.attr("text-anchor")) return;
+          // Now let's calculate the distance between
+          // these elements.
+          y2 = db.attr("y");
+          deltaY = y1 - y2;
+
+          // Our spacing is greater than our specified spacing,
+          // so they don't collide.
+          if (Math.abs(deltaY) > spacing) return;
+
+          // If the labels collide, we'll push each
+          // of the two labels up and down a little bit.
+          again = true;
+          sign = deltaY > 0 ? 1 : -1;
+          adjust = sign * alpha;
+          da.attr("y",+y1 + adjust);
+          db.attr("y",+y2 - adjust);
+      });
+  });
+// Adjust our line leaders here
+  // so that they follow the labels.
+  if(again) {
+      labelElements = textLabels[0];
+      textLines.attr("y2",function(d,i) {
+          labelForLine = d3.select(labelElements[i]);
+          return labelForLine.attr("y");
+      });
+      setTimeout(relax,20)
+  }
+}
+
+			// Make map responsive
+			d3.select('svg')
+				.attr( 'preserveAspectRatio',"xMinYMin meet")
+				.attr("viewBox", "0 0 750 500")
+				.attr('width', '100%')
+
+
+relax();
+
+</script>
+</body>
+</html>

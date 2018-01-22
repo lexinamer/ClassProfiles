@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Radial Progress</title>
+
+    <style>
+      body {
+        width: 900px;
+        margin: 0 auto;
+      }
+
+      #radial-graph {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      .container {
+        width: 33%;
+        text-align: center;
+        margin-top: 50px;
+      }
+
+      .radial-text {
+        font-size: 3em;
+        font-family: serif;
+        text-align: center;
+        color: #2c3187;
+        margin: 0;
+        cursor: default;
+      }
+
+      .other {
+        font-size: 2em;
+      }
+
+
+      .radial-path {
+        pointer-events: all;
+      }
+
+      .radial-path:hover{
+        stroke-width: 3px;
+      }
+
+      @media(max-width: 890px){
+        body {
+          max-width: 100%;
+        }
+        .container{
+          width: 50%;
+        }
+
+        .other {
+          font-size: 1.5em;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <div id="radial-graph"></div>
+
+  <!-- SCRIPT -->
+  <script src="https://d3js.org/d3.v3.min.js"></script>
+  <script>
+
+    var data = [{
+        percentage: 35,
+        title: 'Women'
+      },{
+        percentage: 22,
+        title: 'Married'
+      },{
+        percentage: 20,
+        title: 'Minority'
+      },{
+        percentage: 10,
+        title: 'Underrepresented Minority Students'
+      },{
+        percentage: 22,
+        title: 'International Citizens'
+      }];
+
+
+  for (var i in data) {
+    var wrapper = document.querySelector('#radial-graph');
+    var percentage = data[i].percentage;
+    var title = data[i].title;
+    var angle = Math.PI * 2;
+    var boxSize = 200;
+
+    var colors = {
+      fill: '#2c3187',
+      track: '#cec6bc',
+      text: '#2c3187',
+      stroke: '#FFFFFF',
+    }
+
+    //Define the circle
+    var circle = d3.svg.arc()
+      .startAngle(0)
+      .innerRadius(100)
+      .outerRadius(60);
+
+    // Setup SVG container
+    var container = d3.select(wrapper)
+      .append('div')
+      .attr('class', 'container')
+
+    // Setup SVG wrapper
+    var svg = container.append('svg')
+      .attr('width', boxSize)
+      .attr('height', boxSize);
+
+    // Add Group container
+    var g = svg.append('g')
+      .attr('transform', 'translate(' + boxSize / 2 + ',' + boxSize / 2 + ')');
+
+    //Setup track
+    var track = g.append('g');
+    track.append('path')
+      .attr('fill', colors.track)
+      .attr('stroke', colors.stroke)
+      .attr('stroke-width', '7px')
+      .attr('d', circle.endAngle(angle));
+
+    //Add colour fill
+    var value = track.append('path')
+      .attr('class', 'radial-path')
+      .attr('fill', colors.fill)
+      .attr('stroke', colors.stroke)
+      .attr('stroke-width', '7px')
+      .attr('d', circle.endAngle((percentage/100).toFixed(2) * angle))
+
+    //Add text value
+    var numberText = track.append('text')
+      .attr('class', 'radial-text')
+      .attr('fill', colors.text)
+      .attr('text-anchor', 'middle')
+      .attr('dy', '.3em')
+      .text(percentage + '%');
+
+    //Add Text title
+    var title = container.append('p')
+      .attr('class', 'radial-text other')
+      .text(title)
+  }
+  </script>
+
+  </body>
+</html>

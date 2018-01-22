@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Class Stats</title>
+
+    <style>
+      body {
+        width: 900px;
+        margin: 0 auto;
+      }
+
+      #stats-graphs {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      .stats {
+        padding: 20px;
+        color: #1c89c8;
+        flex-grow: 1;
+        width: 28%;
+        height: 250px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      p:nth-child(1){
+        margin-top: 10px;
+        margin-bottom: 0;
+        font-size: 6em;
+        font-weight: 600;
+      }
+
+      p:nth-child(2){
+        font-size: 2em;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        flex-grow: 1;
+      }
+
+      hr{
+        font-weight: 600;
+        height: 5px;
+        background: #1c89c8;
+        border: none;
+        width: 100%;
+      }
+
+      @media(max-width: 890px){
+        body {
+          max-width: 100%;
+        }
+        .stats {
+          width: 45%;
+          flex-grow: 0;
+          height: auto;
+          font-size: 70%;
+          padding: 10px;
+        }
+      }
+
+    </style>
+  </head>
+  <body>
+
+    <div id="stats-graphs"></div>
+
+    <script>
+
+      var data = [{
+        number: '440',
+        stat: 'Class Size'
+      },{
+        number: '29',
+        stat: 'Average Age'
+      },{
+        number: '5-6',
+        stat: 'Average Years of Work Experience'
+      },{
+        number: '3.0-3.83',
+        stat: 'Average Undergraduate GPA (middle 80%)'
+      },{
+        number: '640-750',
+        stat: 'GMAT Range <br> (middle 80%)'
+      }];
+
+      for (var i in data) {
+        var markup = `
+          <div class="stats">
+            <p>${data[i].number}</p>
+            <p>${data[i].stat}</p>
+            <hr>
+          </div>
+        `
+
+        document.querySelector('#stats-graphs').insertAdjacentHTML('beforeend', markup)
+      }
+
+    </script>
+  </body>
+</html>
