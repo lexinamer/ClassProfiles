@@ -1,0 +1,563 @@
+<h3>Stats Graphs</h3>
+<div id="stats-graphs"></div>
+<br><br><br>
+
+<h3>Demographics</h3>
+<div id="radial-graph"></div>
+<br><br><br>
+
+<h3>US Geographic</h3>
+<div id="us-map"></div>
+<br><br><br>
+
+<h3>World Geographic</h3>
+<div id="world-map"></div>
+
+<h3>Donut Chart</h3>
+<svg id="donut-chart">
+  <g id="canvas">
+    <g id="art" />
+    <g id="labels" />
+  </g>
+</svg>
+
+
+
+
+
+<!-- DATA -->
+<script>
+  var statsData = [{
+    number: '440',
+    stat: 'Class Size'
+  },{
+    number: '29',
+    stat: 'Average Age'
+  },{
+    number: '5-6',
+    stat: 'Average Years of Work Experience'
+  },{
+    number: '3.0-3.83',
+    stat: 'Average Undergraduate GPA (middle 80%)'
+  },{
+    number: '640-750',
+    stat: 'GMAT Range <br> (middle 80%)'
+  }];
+
+
+
+  var demoData = [{
+      percentage: 35,
+      title: 'Women'
+    },{
+      percentage: 22,
+      title: 'Married'
+    },{
+      percentage: 20,
+      title: 'Minority'
+    },{
+      percentage: 10,
+      title: 'Underrepresented Minority Students'
+    },{
+      percentage: 22,
+      title: 'International Citizens'
+    }];
+
+
+    var usData = [
+      "Western US: 14%",
+      "Midwestern US: 8%",
+      "Mid-Atlantic US: 13%",
+      "Northeastern US: 18%",
+      "Southern US: 10%",
+      "International (by country of residence): 36%"
+    ];
+
+
+    var worldData = [
+      "Austrailia",
+      "Brazil",
+      "Canada",
+      "China",
+      "France",
+      "Ghana",
+      "Israel",
+      "Japan",
+      "Malaysia",
+      "Nigeria",
+      "Panama",
+      "Peru",
+      "Sinagpore",
+      "South Africa",
+      "Thailand",
+      "USA",
+      "United Arab Emirates"
+    ]
+
+
+    var industryData = [{
+      instances: 19,
+      label: 'Consulting'
+    },{
+      instances: 5,
+      label: 'Energy/Chemical/Gas'
+    },{
+      instances: 3,
+      label: 'Consumer Goods'
+    },{
+      instances: 3,
+      label: 'Entrepreneurship'
+    },{
+      instances: 1,
+      label: 'Environment & Sustainability'
+    },{
+      instances: 19,
+      label: 'Financial Services'
+    },{
+      instances: 3,
+      label: 'General Management'
+    },{
+      instances: 6,
+      label: 'Government'
+    },{
+      instances: 2,
+      label: 'Human Resources'
+    },{
+      instances: 4,
+      label: 'IT'
+    },{
+      instances: 2,
+      label: 'International Development'
+    },{
+      instances: 7,
+      label: 'Hospital/Health Care'
+    },{
+      instances: 3,
+      label: 'Manufacturing/Operations'
+    },{
+      instances: 4,
+      label: 'Marketing/PR/Advertising'
+    },{
+      instances: 1,
+      label: 'Media/Sports/Entertainment'
+    },{
+      instances: 7,
+      label: 'Nonprofit/Education/Special Org.'
+    },{
+      instances: 6,
+      label: 'Other'
+    },{
+      instances: 2,
+      label: 'Research & Development'
+    },{
+      instances: 4,
+      label: 'Sales/Business Development'
+    },];
+
+</script>
+
+
+
+
+
+
+<script src="https://d3js.org/d3.v3.min.js"></script>
+
+<!-- SCRIPTS -->
+<script>
+(function () {
+  for (var i in statsData) {
+    var markup = `
+      <div class="stats">
+        <p>${statsData[i].number}</p>
+        <p>${statsData[i].stat}</p>
+        <hr>
+      </div>
+    `
+    document.querySelector('#stats-graphs').insertAdjacentHTML('beforeend', markup)
+  }
+})();
+
+
+(function () {
+  for (var i in demoData) {
+    var wrapper = document.querySelector('#radial-graph');
+    var percentage = demoData[i].percentage;
+    var title = demoData[i].title;
+    var angle = Math.PI * 2;
+    var boxSize = 200;
+
+    var colors = {
+      fill: '#2c3187',
+      track: '#cec6bc',
+      text: '#2c3187',
+      stroke: '#efecea',
+    }
+
+    //Define the circle
+    var circle = d3.svg.arc()
+      .startAngle(0)
+      .innerRadius(100)
+      .outerRadius(60);
+
+    // Setup SVG container
+    var container = d3.select(wrapper)
+      .append('div')
+      .attr('class', 'container')
+
+    // Setup SVG wrapper
+    var svg = container.append('svg')
+      .attr('width', boxSize)
+      .attr('height', boxSize);
+
+    // Add Group container
+    var g = svg.append('g')
+      .attr('transform', 'translate(' + boxSize / 2 + ',' + boxSize / 2 + ')');
+
+    //Setup track
+    var track = g.append('g');
+    track.append('path')
+      .attr('fill', colors.track)
+      .attr('stroke', colors.stroke)
+      .attr('stroke-width', '7px')
+      .attr('d', circle.endAngle(angle));
+
+    //Add colour fill
+    var value = track.append('path')
+      .attr('class', 'radial-path')
+      .attr('fill', colors.fill)
+      .attr('stroke', colors.stroke)
+      .attr('stroke-width', '7px')
+      .attr('d', circle.endAngle((percentage/100).toFixed(2) * angle))
+
+    //Add text value
+    var numberText = track.append('text')
+      .attr('class', 'radial-text')
+      .attr('fill', colors.text)
+      .attr('text-anchor', 'middle')
+      .attr('dy', '.3em')
+      .text(percentage + '%');
+
+    //Add Text title
+    var title = container.append('p')
+      .attr('class', 'radial-text other')
+      .text(title)
+  }
+})();
+
+
+(function () {
+  var width = 960;
+  var height = 500;
+  var wrapper = document.querySelector('#us-map');
+
+  var projection = d3.geo.albersUsa()
+     .translate([width/2, height/2])
+     .scale([1000]);
+
+  // Define path generator
+  var path = d3.geo.path()
+     .projection(projection);
+
+
+  // Define linear scale for output
+  var color = d3.scale.linear()
+    .range(["rgb(0, 115, 170)","rgb(10, 47, 136)","rgb(102,141,173)","rgb(97,97,99)", "rgb(165, 155, 144)", "rgb(97,97,99)"]);
+
+  //Create SVG element and append map to the SVG
+  var svg = d3.select(wrapper).append("svg")
+        // .attr("width", width)
+        // .attr("height", height)
+        // .attr( 'preserveAspectRatio',"xMinYMin meet")
+        // .attr('width', '100%')
+        .attr("viewBox", "0 0 " + width + " " + height )
+
+  var usStates =
+    [{"state":"Alabama","info":"4"}, {"state":"Alaska","info":"0"},{"state":"Arkansas","info":"4"},{"state":"Arizona","info":"0"},{"state":"California","info":"0"},{"state":"Colorado","info":"1"},{"state":"Connecticut","info":"3"},{"state":"Delaware","info":"2"},{"state":"Florida","info":"4"},{"state":"Georgia","info":"4"},{"state":"Hawaii","info":"4"},{"state":"Iowa","info":"1"},{"state":"Idaho","info":"0"},{"state":"Illinois","info":"1"},{"state":"Indiana","info":"1"},{"state":"Kansas","info":"1"},{"state":"Kentucky","info":"1"},{"state":"Louisiana","info":"4"},{"state":"Maine","info":"3"},{"state":"Maryland","info":"2"},{"state":"Massachusetts","info":"3"},{"state":"Michigan","info":"1"},{"state":"Minnesota","info":"1"},{"state":"Missouri","info":"1"},{"state":"Mississippi","info":"4"},{"state":"Montana","info":"1"},{"state":"North Carolina","info":"4"},{"state":"North Dakota","info":"1"},{"state":"Nebraska","info":"1"},{"state":"New Hampshire","info":"3"},{"state":"New Jersey","info":"2"},{"state":"New Mexico","info":"0"},{"state":"Nevada","info":"0"},{"state":"New York","info":"2"},{"state":"Ohio","info":"1"},{"state":"Oklahoma","info":"1"},{"state":"Oregon","info":"0"},{"state":"Pennsylvania","info":"2"},{"state":"Rhode Island","info":"3"},{"state":"South Carolina","info":"4"},{"state":"South Dakota","info":"1"},{"state":"Tennessee","info":"4"},{"state":"Texas","info":"4"},{"state":"Utah","info":"0"},{"state":"Virginia","info":"4"},{"state":"Vermont","info":"3"},{"state":"Washington","info":"0"},{"state":"Wisconsin","info":"1"},{"state":"West Virginia","info":"1"},{"state":"Wyoming","info":"1"}];
+
+  // Load GeoJSON data and merge with states data
+  d3.json("https://www.jasonbase.com/things/WxDP.json", function(json) {
+
+    // Loop through each state data value in the .csv file
+    for (var i = 0; i < usStates.length; i++) {
+      var dataState = usStates[i].state;
+      var dataValue = usStates[i].info;
+
+      color.domain([0,1,2,3,4,5]); // setting the range of the input data
+
+      for (var j = 0; j < json.features.length; j++)  {
+        var jsonState = json.features[j].properties.name;
+        if (dataState == jsonState) {
+          json.features[j].properties.info = dataValue;
+          break;
+        }
+      }
+    }
+
+    // Bind the data to the SVG and create one path per GeoJSON feature
+    svg.selectAll("path")
+      .data(json.features)
+      .enter()
+      .append("path")
+      .attr("d", path)
+      .attr("class", "graph-paths")
+      .style("stroke", "#fff")
+      .style("stroke-width", "1")
+      .style("fill", function(d) {
+        var value = d.properties.info;
+          if (value) {
+            return color(value);
+          } else {
+            return "rgb(213,222,217)";
+          }
+      });
+
+    // Create the Legend
+    var legendwrapper = d3.select(wrapper).append("div")
+      .attr("class", "legend")
+
+    legendwrapper.append("h1")
+      .html("Regional" + "<br/>" + "Representation:")
+
+    legendwrapper.append("ul")
+    .append("li")
+      .selectAll("li")
+      .data(color.domain().slice())
+      .enter()
+      .append("li")
+        .style("color", color)
+        .data(usData)
+          .text(function(d) { return d; })
+   });
+})();
+
+
+(function () {
+  var width = 960;
+  var height = 550;
+  var wrapper = document.querySelector('#world-map');
+
+  var projection = d3.geo.mercator()
+    .translate([width / 2, height / 2])
+    .scale(150)
+
+  var path = d3.geo.path()
+    .projection(projection);
+
+  var svg = d3.select(wrapper).append("svg")
+    .attr("viewBox", "0 0 " + width + " " + height )
+
+    // Load GeoJSON data and merge with country data
+    d3.json("https://www.jasonbase.com/things/Ex2o.json", function(json) {
+
+      // Loop through each country data value in the .csv file
+      for (var i = 0; i < worldData.length; i++) {
+        var dataState = worldData[i];
+
+        for (var j = 0; j < json.features.length; j++)  {
+          var jsonState = json.features[j].properties.name;
+          if (dataState == jsonState) {
+            json.features[j].properties.info = 1;
+          }
+        }
+      }
+
+      svg.selectAll("path")
+        .data(json.features.filter(d => d.id !== "ATA"))
+        .enter()
+        .append("path")
+        .attr("d", path)
+        .attr("class", "graph-paths")
+        .style("stroke", "#fff")
+        .style("stroke-width", "1")
+        .style("fill", function(d) {
+          var value = d.properties.info;
+            if (value > 0) {
+              return "#0073aa";
+            } else{
+              return "#cbc3ba";
+            }
+        });
+
+      // Create the Legend
+      var legendwrapper = d3.select(wrapper).append("div")
+        .attr("class", "legend")
+
+      legendwrapper.append("h1")
+        .html("Countries" + "<br/>" + "Represented:")
+
+      legendwrapper.append("ul")
+        .selectAll('li')
+          .data(worldData)
+          .enter()
+            .append("li")
+              .style("color", "#68696b")
+              .text(function(d) { return d; })
+
+    });
+})();
+
+
+(function () {
+  svg = d3.select("#donut-chart");
+  canvas = d3.select("#canvas");
+  art = d3.select("#art");
+  labels = d3.select("#labels");
+
+  jhw_pie = d3.layout.pie()
+  .sort(null)
+  jhw_pie.value(function (d, i) {
+    return d.instances;
+  });
+
+  cDim = {
+    height: 500,
+    width: 960,
+    innerRadius: 50,
+    outerRadius: 140,
+    labelRadius: 175
+  }
+
+  // Set the size of our SVG element
+  svg.attr({
+    height: cDim.height,
+    width: cDim.width
+  });
+
+  canvas.attr("transform", "translate(" + (cDim.width / 2) + "," + (200) + ")");
+
+  pied_data = jhw_pie(industryData);
+
+  // The pied_arc function we make here will calculate the path
+  // information for each wedge based on the data set. This is
+  // used in the "d" attribute.
+  pied_arc = d3.svg.arc()
+    .innerRadius(50)
+    .outerRadius(150);
+
+  // It is part of d3 core.
+  var colors = d3.scale.ordinal()
+          .range(["#243668", "#2b7eb4", "#186b97", "#6391a1", "#d2c5b7", "#9c9286", "#5b5b59"]);
+
+
+  // Let's start drawing the arcs.
+  enteringArcs = art.selectAll(".wedge").data(pied_data).enter();
+
+  enteringArcs.append("path")
+    .attr("class", "wedge")
+    .attr("d", pied_arc)
+    .style("fill", function (d, i) {
+       return colors(i);
+  });
+
+  // Now we'll draw our label lines, etc.
+  enteringLabels = labels.selectAll(".label").data(pied_data).enter();
+  labelGroups = enteringLabels.append("g").attr("class", "label");
+
+  textLines = labelGroups.append("line").attr({
+    x1: function (d, i) {
+        return pied_arc.centroid(d)[0];
+    },
+    y1: function (d, i) {
+        return pied_arc.centroid(d)[1];
+    },
+    x2: function (d, i) {
+        centroid = pied_arc.centroid(d);
+        midAngle = Math.atan2(centroid[1], centroid[0]);
+        x = Math.cos(midAngle) * cDim.labelRadius;
+        return x;
+    },
+    y2: function (d, i) {
+        centroid = pied_arc.centroid(d);
+        midAngle = Math.atan2(centroid[1], centroid[0]);
+        y = Math.sin(midAngle) * cDim.labelRadius;
+        return y;
+    },
+        'class': "label-line",
+        stroke: function (d, i) {
+           return colors(i);
+      }
+  });
+
+  textLabels = labelGroups.append("text").attr({
+    x: function (d, i) {
+        centroid = pied_arc.centroid(d);
+        midAngle = Math.atan2(centroid[1], centroid[0]);
+        x = Math.cos(midAngle) * cDim.labelRadius;
+        sign = (x > 0) ? 1 : -1
+        labelX = x + (5 * sign)
+        return labelX;
+    },
+    y: function (d, i) {
+        centroid = pied_arc.centroid(d);
+        midAngle = Math.atan2(centroid[1], centroid[0]);
+        y = Math.sin(midAngle) * cDim.labelRadius;
+        return y;
+    },
+        'text-anchor': function (d, i) {
+        centroid = pied_arc.centroid(d);
+        midAngle = Math.atan2(centroid[1], centroid[0]);
+        x = Math.cos(midAngle) * cDim.labelRadius;
+        return (x > 0) ? "start" : "end";
+    },
+        'class': 'label-text'
+    }).text(function (d) {
+        return d.data.instances + "% " + d.data.label
+      });
+
+  alpha = 0.5;
+  spacing = 25;
+
+  function relax() {
+    again = false;
+    textLabels.each(function (d, i) {
+        a = this;
+        da = d3.select(a);
+        y1 = da.attr("y");
+        textLabels.each(function (d, j) {
+            b = this;
+            // a & b are the same element and don't collide.
+            if (a == b) return;
+            db = d3.select(b);
+            // a & b are on opposite sides of the chart and
+            // don't collide
+            if (da.attr("text-anchor") != db.attr("text-anchor")) return;
+            // Now let's calculate the distance between
+            // these elements.
+            y2 = db.attr("y");
+            deltaY = y1 - y2;
+
+            // Our spacing is greater than our specified spacing,
+            // so they don't collide.
+            if (Math.abs(deltaY) > spacing) return;
+
+            // If the labels collide, we'll push each
+            // of the two labels up and down a little bit.
+            again = true;
+            sign = deltaY > 0 ? 1 : -1;
+            adjust = sign * alpha;
+            da.attr("y",+y1 + adjust);
+            db.attr("y",+y2 - adjust);
+        });
+    });
+  // Adjust our line leaders here
+    // so that they follow the labels.
+    if(again) {
+        labelElements = textLabels[0];
+        textLines.attr("y2",function(d,i) {
+            labelForLine = d3.select(labelElements[i]);
+            return labelForLine.attr("y");
+        });
+        setTimeout(relax,20)
+    }
+  }
+
+  d3.select('#donut-chart')
+    .attr( 'preserveAspectRatio',"xMinYMin meet")
+    .attr("viewBox", "0 0 900 450")
+    .attr('width', '100%')
+
+  relax();
+})();
+
+</script>

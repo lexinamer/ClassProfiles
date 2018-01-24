@@ -1,0 +1,232 @@
+#stats-graphs {
+  display: flex;
+  flex-wrap: wrap;
+
+  .stats {
+    padding: 20px;
+    color: #1c89c8;
+    flex-grow: 1;
+    width: 28%;
+    height: 275px;
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+  }
+
+  p:nth-child(1){
+    margin-bottom: 0;
+    font-size: 6em;
+    font-weight: 600;
+    line-height: 1em;
+  }
+
+  p:nth-child(2){
+    font-size: 2em;
+    margin-bottom: 10px;
+    flex-grow: 1;
+    line-height: 1em;
+  }
+
+  hr{
+    font-weight: 600;
+    height: 5px;
+    background: #1c89c8;
+    border: none;
+    width: 100%;
+  }
+}
+
+#radial-graph {
+  display: flex;
+  flex-wrap: wrap;
+
+  .container {
+    width: 33%;
+    text-align: center;
+    margin-top: 50px;
+  }
+
+  .radial-text {
+    font-size: 3em;
+    font-family: serif;
+    text-align: center;
+    color: #2c3187;
+    margin: 0;
+    cursor: default;
+  }
+
+  .other {
+    font-size: 2em;
+  }
+
+
+  .radial-path {
+    pointer-events: all;
+  }
+
+  .radial-path:hover{
+    stroke-width: 3px;
+  }
+}
+
+
+#donut-chart {
+  .label-text {
+    alignment-baseline: middle;
+    font-size: 15px;
+    font-weight: bold;
+    font-family: arial,helvetica,"sans-serif";
+    fill: #243668;
+  }
+
+  .label-line {
+      stroke-width: 2;
+  }
+
+  path:hover {
+    fill-opacity: .7;
+  }
+}
+
+
+
+#us-map	{
+  svg{
+    float: left;
+    width: 80%;
+  }
+
+  .graph-paths:hover {
+    fill-opacity: .7;
+  }
+
+  .legend {
+    float: right;
+    width: 20%;
+    position: relative;
+    top: 100px;
+    right: 100px;
+  }
+
+  .legend h1 {
+    color: #0a2f88;
+    line-height: 0.8em;
+    font-size: 2em;
+  }
+
+  .legend li, .legend ul {
+    padding: 0;
+  }
+
+  .legend li:before {
+    content: "";
+  }
+}
+
+#us-map:after{
+  content: "";
+  display: table;
+  clear: both;
+}
+
+#world-map	{
+  svg{
+    float: left;
+    width: 70%;
+  }
+
+  path:hover {
+    fill-opacity: .7;
+  }
+
+  .legend {
+    float: right;
+    width: 25%;
+  }
+
+  .legend h1 {
+    color: #0a2f88;
+    line-height: 0.8em;
+    font-size: 2em;
+  }
+
+  .legend ul{
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .legend li {
+    flex: 0 1 calc(50%);
+  }
+
+  .legend li, .legend ul {
+    padding: 0;
+  }
+
+  .legend li:before {
+    content: "";
+  }
+}
+
+#world-map:after{
+  content: "";
+  display: table;
+  clear: both;
+}
+
+
+// STATS AND RADIAL
+@media(max-width: 890px){
+  #stats-graphs .stats {
+    width: 45%;
+    flex-grow: 0;
+    height: auto;
+    font-size: 70%;
+    padding: 10px;
+  }
+
+  #radial-graph {
+    .container{
+      width: 100%;
+    }
+
+    .other {
+      font-size: 1em;
+    }
+  }
+
+  #us-map {
+    svg{
+      width: 100%;
+    }
+
+    .legend {
+      width: 100%;
+      position: static;
+    }
+
+    .legend h1 {
+      font-size: 20px;
+    }
+  }
+
+  #world-map {
+    svg{
+      width: 100%;
+    }
+
+    .legend {
+      width: 100%;
+      position: relative;
+      bottom: 20px;
+    }
+
+    .legend li {
+      flex: 0 1 calc(33%);
+    }
+
+    .legend h1 {
+      font-size: 20px;
+    }
+  }
+}
