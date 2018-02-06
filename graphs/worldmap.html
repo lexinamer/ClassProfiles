@@ -66,13 +66,14 @@
 
 	<div id="world-map"></div>
 
-
-	<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://d3js.org/d3.geo.projection.v0.min.js"></script>
+<script src="http://d3js.org/topojson.v1.min.js"></script>
 
   <script>
 
     var data = [
-      "Austrailia",
+      "Australia",
       "Brazil",
       "Canada",
       "China",
@@ -95,9 +96,9 @@
 		var height = 550;
 		var wrapper = document.querySelector('#world-map');
 
-		var projection = d3.geo.mercator()
-			.translate([width / 2, height / 2])
-			.scale(150)
+		var projection = d3.geo.vanDerGrinten()
+			.translate([width / 2, height / 1.5])
+			.scale(160)
 
 		var path = d3.geo.path()
 			.projection(projection);

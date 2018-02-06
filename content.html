@@ -1,19 +1,26 @@
-<h3>Stats Graphs</h3>
+<!--**************************************
+GRAPH CREATION
+**************************************-->
+<!--**************************************
+GRAPH CREATION
+**************************************-->
+<h3 style="color:#1d89c9">Typical Class Stats</h3>
 <div id="stats-graphs"></div>
 <br><br><br>
 
-<h3>Demographics</h3>
+<h3 style="color:#1d89c9">Demographics</h3>
 <div id="radial-graph"></div>
 <br><br><br>
 
-<h3>US Geographic</h3>
+<h3 style="color:#1d89c9">Geographic Representation</h3>
 <div id="us-map"></div>
 <br><br><br>
 
-<h3>World Geographic</h3>
+<h3 style="color:#1d89c9">Geographic Representation</h3>
 <div id="world-map"></div>
+<br><br><br>
 
-<h3>Donut Chart</h3>
+<h3 style="color:#1d89c9">Recent Career Focus</h3>
 <svg id="donut-chart">
   <g id="canvas">
     <g id="art" />
@@ -23,9 +30,10 @@
 
 
 
+<!--**************************************
+DATA STORAGE
+**************************************-->
 
-
-<!-- DATA -->
 <script>
   var statsData = [{
     number: '440',
@@ -157,13 +165,15 @@
 </script>
 
 
+<!--**************************************
+ACTUAL SCRIPTS
+**************************************-->
+<style>@media (max-width: 890px){#radial-graph .container {margin-top: 0;}}</style>
 
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://d3js.org/d3.geo.projection.v0.min.js"></script>
+<script src="http://d3js.org/topojson.v1.min.js"></script>
 
-
-
-<script src="https://d3js.org/d3.v3.min.js"></script>
-
-<!-- SCRIPTS -->
 <script>
 (function () {
   for (var i in statsData) {
@@ -337,9 +347,9 @@
   var height = 550;
   var wrapper = document.querySelector('#world-map');
 
-  var projection = d3.geo.mercator()
-    .translate([width / 2, height / 2])
-    .scale(150)
+  var projection = d3.geo.vanDerGrinten()
+    .translate([width / 2, height / 1.5])
+    .scale(160)
 
   var path = d3.geo.path()
     .projection(projection);
@@ -411,7 +421,7 @@
   });
 
   cDim = {
-    height: 500,
+    height: 600,
     width: 960,
     innerRadius: 50,
     outerRadius: 140,
